@@ -54,6 +54,7 @@ def largest_contiguous_subsum(array)
   end
 
   subs_array.map! { |sub| sub.reduce(&:+)}.max
+  #(num of arrays) * (time to reduce     ) + (time for max)
 end
 
 list = [5, 3, -7]
@@ -67,19 +68,31 @@ largest_contiguous_subsum(list)
 
 # => O(n) = n && O(1) memory
 def largest_contiguous_subsum_better(array)
-  return array[0] if array.size <= 1
-
-  largest_sum = array[0] + array[1]
-
-  array.each_with_index do |val, idx|
-    break if idx == array.length - 2
-    sum = val + array[idx+1] + array[idx+2]
-    largest_sum = sum if sum > largest_sum
+  sum = 0
+  max = 0
+  max_idx = 0
+  array.each_with_index do |el, idx|
+    sum += el
+    if sum > max
+      max = sum
+      max_idx = idx
+    end
   end
 
-  largest_sum
+  sum = 0
+  max_idx.downto(0) do |j|
+    sum += array[j]
+    if sum > max
+      max = sum
+    end
+  end
+
+  max
 end
 # list = [2, 3, -6, 7, -6, 7]
+list = [-10, -10, 10, 10, 5, -1]
 p largest_contiguous_subsum_better(list)
+
+p largest_contiguous_subsum_better([5, 3, -7])
 
 p largest_contiguous_subsum_better([5, 3])
